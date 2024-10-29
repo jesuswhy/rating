@@ -1,4 +1,3 @@
-// Ваши ключевые параметры для доступа к таблице
 const SHEET_ID = '1J-84v9v1d4s-lKOa8PYq1Ix6EWGkl7HdRGiJ4PhF95g';  // Замените на ваш ID таблицы
 const API_KEY = 'AIzaSyDYnae9ehXc1-jhXpoBzTT8BYobwBkQbU8';  // Замените на ваш API ключ
 
@@ -8,8 +7,19 @@ const buyerList = document.getElementById('buyerList');
 const modal = document.getElementById('buyerModal');
 const closeBtn = document.querySelector('.close-btn');
 
+// Показать экран загрузки при открытии страницы
+document.getElementById('loading').style.display = 'flex';
+
+// Функция для скрытия экрана загрузки
+function hideLoadingScreen() {
+    document.getElementById('loading').style.display = 'none';
+    document.querySelector('header').style.display = 'block'; // Показываем header
+}
+
+// Функция открытия модального окна с данными покупателя
 function openModal(buyerData) {
     document.getElementById('buyerName').textContent = buyerData.name;
+    document.getElementById('buyerSOW').textContent = buyerData.SOW;
     document.getElementById('buyerRating').textContent = buyerData.rating;
     document.getElementById('buyerReputation').textContent = buyerData.reputation;
     document.getElementById('contractSpeed').textContent = buyerData.contractSpeed;
@@ -30,6 +40,7 @@ window.onclick = function(event) {
     }
 };
 
+// Функция загрузки данных и управления анимацией загрузки
 async function loadBuyers() {
     try {
         const response = await fetch(SHEET_URL);
@@ -38,21 +49,19 @@ async function loadBuyers() {
         const rows = data.values;
         if (rows && rows.length > 0) {
             rows.some(row => {
-                // Прекращаем обработку, если строка пустая
                 if (row.length === 0 || row.every(cell => cell === '')) return true;
 
-                // Создаем объект с данными покупателя
                 const buyerData = {
-                    name: row[1] || 'N/A',               // Имя покупателя
-                    rating: row[3] || 'N/A',             // Рейтинг
-                    reputation: row[6] || 'N/A',         // Репутация
-                    contractSpeed: row[8] || 'N/A',      // Скорость подписания контракта
-                    supplyCount: row[16] || 'N/A',       // Количество поставок
-                    paymentSpeed: row[18] || 'N/A',      // Скорость оплаты
-                    qualityClaims: row[19] || 'N/A'      // Претензии по качеству
+                    name: row[1] || 'N/A',    
+                    SOW: row[2] || 'N/A',           
+                    rating: row[3] || 'N/A',             
+                    reputation: row[6] || 'N/A',         
+                    contractSpeed: row[18] || 'N/A',      
+                    supplyCount: row[17] || 'N/A',       
+                    paymentSpeed: row[19] || 'N/A',      
+                    qualityClaims: row[20] || 'N/A'      
                 };
 
-                // Создаем элемент списка для покупателя
                 const listItem = document.createElement('li');
                 listItem.className = 'buyer-item';
                 listItem.innerHTML = `
@@ -63,8 +72,10 @@ async function loadBuyers() {
                 buyerList.appendChild(listItem);
             });
         }
+        hideLoadingScreen(); // Скрываем экран загрузки после успешной загрузки данных
     } catch (error) {
         console.error("Ошибка загрузки данных:", error);
+        hideLoadingScreen(); // Скрываем экран даже в случае ошибки
     }
 }
 
