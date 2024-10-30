@@ -165,7 +165,7 @@ h1 {
 /* Стили для индикатора загрузки */
 .loader {
     border: 8px solid #f3f3f3;
-    border-top: 8px solid #3498db;
+    border-top: 8px solid #00ff2a;
     border-radius: 50%;
     width: 50px;
     height: 50px;
@@ -179,3 +179,14 @@ h1 {
 }
 
 
+/* Основные стили для покупателя */
+.buyer-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    margin: 12px 0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
