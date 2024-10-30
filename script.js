@@ -94,3 +94,16 @@ async function loadBuyers() {
 
 
 window.onload = loadBuyers;
+
+
+// Пример поиска покупателей
+document.getElementById('searchBar').addEventListener('input', function() {
+    const query = this.value.toLowerCase();
+    const buyerItems = document.querySelectorAll('.buyer-item');
+
+    buyerItems.forEach(item => {
+        const name = item.querySelector('.buyer-name').textContent.toLowerCase();
+        item.style.display = name.includes(query) ? '' : 'none';
+    });
+});
+
