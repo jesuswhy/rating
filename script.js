@@ -41,6 +41,12 @@ window.onclick = function(event) {
 };
 
 // Функция загрузки данных и управления анимацией загрузки
+function getGroup(buyerData) {
+    if (buyerData.rating >= 85) return 'groupA';
+    else if (buyerData.rating >= 60) return 'groupB';
+    else return 'groupC';
+}
+
 async function loadBuyers() {
     try {
         const response = await fetch(SHEET_URL);
@@ -48,18 +54,20 @@ async function loadBuyers() {
 
         const rows = data.values;
         if (rows && rows.length > 0) {
-            rows.some(row => {
-                if (row.length === 0 || row.every(cell => cell === '')) return true;
+            for (const row of rows) {
+                // Проверяем, является ли строка полностью пустой
+                if (row.every(cell => cell === '')) break;
 
+                // Заполняем данные о покупателе, если строка не пустая
                 const buyerData = {
-                    name: row[1] || 'N/A',    
-                    SOW: row[2] || 'N/A',           
-                    rating: row[3] || 'N/A',             
-                    reputation: row[6] || 'N/A',         
-                    contractSpeed: row[18] || 'N/A',      
-                    supplyCount: row[17] || 'N/A',       
-                    paymentSpeed: row[19] || 'N/A',      
-                    qualityClaims: row[20] || 'N/A'      
+                    name: row[1] || 'N/A',
+                    SOW: row[2] || 'N/A',
+                    rating: parseInt(row[3]) || 0,
+                    reputation: row[6] || 'N/A',
+                    contractSpeed: row[18] || 'N/A',
+                    supplyCount: row[17] || 'N/A',
+                    paymentSpeed: row[19] || 'N/A',
+                    qualityClaims: row[20] || 'N/A'
                 };
 
                 const listItem = document.createElement('li');
@@ -69,8 +77,11 @@ async function loadBuyers() {
                     <span class="buyer-rating">Рейтинг: ${buyerData.rating}</span>
                 `;
                 listItem.onclick = () => openModal(buyerData);
-                buyerList.appendChild(listItem);
-            });
+
+                // Добавляем покупателя в соответствующий список группы
+                const group = getGroup(buyerData);
+                document.getElementById(group).appendChild(listItem);
+            }
         }
         hideLoadingScreen(); // Скрываем экран загрузки после успешной загрузки данных
     } catch (error) {
@@ -78,5 +89,8 @@ async function loadBuyers() {
         hideLoadingScreen(); // Скрываем экран даже в случае ошибки
     }
 }
+
+
+
 
 window.onload = loadBuyers;
