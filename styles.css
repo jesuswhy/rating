@@ -2,7 +2,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 body {
@@ -17,7 +17,6 @@ body {
 }
 
 header {
-    display: none;
     text-align: center;
     margin-bottom: 30px;
 }
@@ -27,48 +26,44 @@ h1 {
     color: #333;
     margin-bottom: 10px;
     font-weight: 700;
-    background: #333;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+}
+
+.search-input {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 80%;
+    max-width: 400px;
+}
+
+.buyers-section {
+    width: 100%;
+    max-width: 800px;
+    text-align: center;
 }
 
 .buyer-list {
-    list-style-type: none;
-    width: 100%;
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Расстояние между карточками */
 }
 
 .buyer-item {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     background: #ffffff;
-    padding: 15px 20px;
+    padding: 15px;
     margin: 12px 0;
     border-radius: 10px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .buyer-item:hover {
-    background: #e8f5e9;
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
-}
-
-.buyer-name {
-    font-weight: 600;
-    font-size: 1.1em;
-    color: #333;
-}
-
-.buyer-rating {
-    color: #888;
-    font-size: 0.9em;
-    font-weight: 400;
+    transform: scale(1.03); /* Увеличение карточки при наведении */
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2); /* Более выраженная тень */
 }
 
 .modal {
@@ -91,13 +86,6 @@ h1 {
     max-width: 500px;
     border-radius: 12px;
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
-    position: relative;
-    animation: fadeIn 0.4s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
 }
 
 .close-btn {
@@ -106,26 +94,10 @@ h1 {
     right: 12px;
     font-size: 1.5em;
     cursor: pointer;
-    color: #999;
-    transition: color 0.3s;
-}
-
-.close-btn:hover {
-    color: #333;
 }
 
 .modal h2 {
     margin-top: 0;
-    color: #333;
-    font-size: 1.8em;
-    font-weight: 700;
-}
-
-.modal p {
-    margin: 10px 0;
-    font-size: 1em;
-    line-height: 1.6;
-    color: #555;
 }
 
 /* Мобильная адаптация */
@@ -133,22 +105,12 @@ h1 {
     h1 {
         font-size: 2em;
     }
-
     .buyer-item {
         flex-direction: column;
         align-items: flex-start;
     }
-
-    .buyer-name {
-        margin-bottom: 5px;
-    }
-
-    .modal-content {
-        width: 95%;
-    }
 }
 
-/* Экран загрузки */
 /* Экран загрузки */
 .loading-screen {
     display: flex;
@@ -159,42 +121,13 @@ h1 {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: white; /* можно настроить по вашему дизайну */
+    background-color: white;
     z-index: 10;
 }
 
-/* Стили для гифки загрузки */
 .loader-gif {
-    width: 100px; /* Установите размер по желанию */
-    height: 100px; /* Установите размер по желанию */
+    width: 100px;
+    height: 100px;
 }
 
 
-/* Стили для индикатора загрузки */
-.loader {
-    border: 8px solid #f3f3f3;
-    border-top: 8px solid #00ff2a;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 1s linear infinite;
-}
-
-/* Анимация вращения */
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-
-/* Основные стили для покупателя */
-.buyer-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    margin: 12px 0;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-}
