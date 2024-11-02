@@ -21,6 +21,10 @@ header {
     margin-bottom: 30px;
 }
 
+p {
+    text-align: center;
+}
+
 h1 {
     font-size: 2.5em;
     color: #333;
@@ -40,7 +44,6 @@ h1 {
 .buyers-section {
     width: 100%;
     max-width: 800px;
-    text-align: center;
 }
 
 .buyer-list {
@@ -130,4 +133,21 @@ h1 {
     height: 200px;
 }
 
+#unsoldVolumes {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px 0;
+    text-align: center;
+}
 
+#unsoldVolumeList {
+    list-style-type: none;
+    padding: 0;
+}
+
+#unsoldVolumeList li {
+    background: #f9f9f9;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+}
