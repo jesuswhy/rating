@@ -47,6 +47,42 @@ function getGroup(buyerData) {
     else return 'groupC';
 }
 
+const UNSOLD_VOLUME_SHEET_URL = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Сделки!A2:AI?key=${API_KEY}`;
+
+// Загрузка данных о непроданных объемах
+async function loadUnsoldVolumes() {
+    try {
+        const response = await fetch(UNSOLD_VOLUME_SHEET_URL);
+        const data = await response.json();
+
+        const rows = data.values;
+        const unsoldVolumeList = document.getElementById('unsoldVolumeList');
+        unsoldVolumeList.innerHTML = ''; // Очистка списка перед добавлением новых элементов
+
+        if (rows && rows.length > 0) {
+            rows.forEach(row => {
+                if (!row[9]) { 
+                    const volumeData = {
+                        number: row[0], 
+                        product: row[1], 
+                        amount: row[10], 
+                        month: row[17] 
+                    };
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `Поставка ${volumeData.number}: ${volumeData.product}, ${volumeData.amount} тн, ${volumeData.month}`;
+
+                    unsoldVolumeList.appendChild(listItem);
+                }
+            });
+        }
+    } catch (error) {
+        console.error("Ошибка загрузки данных о непроданных объемах:", error);
+    }
+}
+
+
+
+
 async function loadBuyers() {
     try {
         const response = await fetch(SHEET_URL);
@@ -54,11 +90,11 @@ async function loadBuyers() {
 
         const rows = data.values;
         if (rows && rows.length > 0) {
-            for (const row of rows) {
-                // Проверяем, является ли строка полностью пустой
-                if (row.every(cell => cell === '')) break;
+            rows.forEach(row => {
+                // Проверяем, является ли строка пустой
+                if (row.every(cell => cell === '')) return;
 
-                // Заполняем данные о покупателе, если строка не пустая
+                // Создание объекта данных покупателя
                 const buyerData = {
                     name: row[1] || 'N/A',
                     SOW: row[2] || 'N/A',
@@ -78,32 +114,19 @@ async function loadBuyers() {
                 `;
                 listItem.onclick = () => openModal(buyerData);
 
-                // Добавляем покупателя в соответствующий список группы
                 const group = getGroup(buyerData);
                 document.getElementById(group).appendChild(listItem);
-            }
+            });
         }
-        hideLoadingScreen(); // Скрываем экран загрузки после успешной загрузки данных
+        hideLoadingScreen();
     } catch (error) {
-        console.error("Ошибка загрузки данных:", error);
-        hideLoadingScreen(); // Скрываем экран даже в случае ошибки
+        console.error("Ошибка загрузки данных покупателей:", error);
+        hideLoadingScreen();
     }
 }
 
-
-
-
-window.onload = loadBuyers;
-
-
-// Пример поиска покупателей
-document.getElementById('searchBar').addEventListener('input', function() {
-    const query = this.value.toLowerCase();
-    const buyerItems = document.querySelectorAll('.buyer-item');
-
-    buyerItems.forEach(item => {
-        const name = item.querySelector('.buyer-name').textContent.toLowerCase();
-        item.style.display = name.includes(query) ? '' : 'none';
-    });
-});
-
+// Загрузка данных по покупателям и непроданным объемам при загрузке страницы
+window.onload = async function() {
+    await loadUnsoldVolumes();
+    await loadBuyers();
+};
